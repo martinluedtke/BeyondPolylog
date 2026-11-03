@@ -1,5 +1,5 @@
 # BeyondPolylog
-Computing Kim functions beyond the polylogarithmic quotient
+Computing Kim functions and verifying Kim's Conjecture beyond the polylogarithmic quotient
 
 Sage code for the paper "Mixed Tate Chabauty–Kim beyond the polylog quotient" [[CDCL26]](https://arxiv.org/abs/2610.25365)
 

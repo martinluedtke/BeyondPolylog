@@ -80,7 +80,7 @@ sage: f2(1/2)
 O(11^14)
 ```
 
-Verifying that the level 4 Chabauty—Kim locus for $`Z = \mathrm{Spec}\,\mathbb{Z}[1/3]`$ is empty:
+Verifying that the level 4 Chabauty–Kim locus for $`Z = \mathrm{Spec}\,\mathbb{Z}[1/3]`$ is empty:
 ```sage
 sage: p = 13; prec = 10
 sage: li_data =  polylog_data(4,p,prec)

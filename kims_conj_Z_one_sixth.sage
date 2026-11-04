@@ -36,7 +36,7 @@ s_unit_sols = [
 @parallel
 def check_prime(p):
     li_data =  polylog_data(4,p,prec)
-    kim_functions = Z_one_sixth_kim_functions(p,prec,abstract_kim_functions,li_data)
+    kim_functions = Z_one_sixth_kim_functions_poly(p,prec,abstract_kim_functions,li_data)
     try:
         locus = compute_depth4_locus(kim_functions,li_data)
     except PrecisionError:

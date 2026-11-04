@@ -29,7 +29,7 @@ def check_prime(p):
     li_data =  polylog_data(4,p,prec)
     #kim_functions = Z_one_half_kim_functions(p,prec,li_data)
     # using only the first two of the four Kim functions is enough:
-    kim_functions = Z_one_half_kim_functions(p,prec,li_data)[:2]
+    kim_functions = Z_one_half_kim_functions_poly(p,prec,li_data)[:2]
     try:
         locus = compute_depth4_locus(kim_functions,li_data)
     except PrecisionError:

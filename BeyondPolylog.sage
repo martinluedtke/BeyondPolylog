@@ -76,7 +76,7 @@ def compute_depth4_locus(kim_functions, li_data=None):
 
         - ``kim_functions`` --  a polynomial or a list of polynomials in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211]
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
 
     OUTPUT:
 
@@ -196,7 +196,7 @@ def multiple_polylog_functions(p,prec,li_data=None):
 
         - ``prec`` - a positive integer specifying the precision
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
     
     OUTPUT: a list of functions ``[logp,Lip1,Lip2,Lip3,Lip21,Lip4,Lip31,Lip211]``
         computing p-adic multiple polylogarithms
@@ -256,7 +256,7 @@ def compute_level4_multiple_polylog_series(residue, p, prec, li_data=None):
 
         - ``prec`` -- a positive integer specifying the precision
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
 
     """
 
@@ -308,6 +308,41 @@ def compute_level4_multiple_polylog_series(residue, p, prec, li_data=None):
     ]
 
 
+def pullback_along_kummer(f,li_data=None):
+    r"""
+    Takes a polynomial in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211] and turns it into
+    a function X(ℤₚ) → ℚₚ.
+
+    INPUT:
+
+        - ``f`` --  a polynomial in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211]
+
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
+    
+    OUTPUT: the function X(ℤₚ) → ℚₚ which evaluates f at elements of X(ℤₚ) using the 
+        p-adic multiple polylogarithm functions from `multiple_polylog_functions`
+
+    """
+
+    K = f.base_ring()
+    p = K.prime()
+    prec = K.precision_cap()
+    mpolylogs = multiple_polylog_functions(p,prec,li_data)
+    return lambda z: f(tuple(Li(z) for Li in mpolylogs))
+
+
+def pullback_all_along_kummer(fs,li_data=None):
+    """
+    Same as `pullback_along_kummer` but for a list of polynomials.
+    """
+
+    if len(fs) == 0:
+        return []
+    if li_data is None:
+        li_data = polylog_data(4,p,prec)
+    return [ pullback_along_kummer(f,li_data) for f in fs ]
+
+
 def Z_one_sixth_periods(p,prec,li_data=None):
     r"""
     Values of the p-adic periods
@@ -321,15 +356,11 @@ def Z_one_sixth_periods(p,prec,li_data=None):
 
         - ``prec`` -- a positive integer specifying the p-adic precision
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
 
     OUTPUT: the list of p-adic periods ``[a3,a2,a32,a332,a322,aσ,a3332,a3322,a3222,a3σ,a2σ]``
 
     """
-
-    # compute polylog data if not provided
-    if li_data is None:
-        li_data = polylog_data(4,p,prec)
 
     logp,Lip1,Lip2,Lip3,Lip21,Lip4,Lip31,Lip211 = multiple_polylog_functions(p,prec,li_data)
     a2 = logp(2)
@@ -351,7 +382,7 @@ def Z_one_sixth_periods(p,prec,li_data=None):
     return a3,a2,a32,a332,a322,aσ,a3332,a3322,a3222,a3σ,a2σ
 
 
-def Z_one_sixth_kim_functions(p,prec,abstract_kim_functions, li_data=None):
+def Z_one_sixth_kim_functions_poly(p,prec,abstract_kim_functions, li_data=None):
     r"""
     The two p-adic Kim functions vanishing on the level 4 Chabauty—Kim locus X(ℤₚ)_{Z,4}
     for Z = Spec(ℤ[1/6]). It takes the abstract Kim functions for #S = 2 as input
@@ -368,17 +399,26 @@ def Z_one_sixth_kim_functions(p,prec,abstract_kim_functions, li_data=None):
         - ``abstract_kim_functions`` - a list of polynomials in
             ℚ[a1,a2,a12,a112,a122,aσ,a1112,a1122,a1222,a1σ,a2σ][Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211]
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
     
     OUTPUT: the list of polynomials in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211] obtained by specializing
         the coefficients with the p-adic periods from ``Z_one_sixth_periods``
 
     """
 
-    if li_data is None:
-        li_data = polylog_data(4,p,prec)
     periods = Z_one_sixth_periods(p,prec,li_data)
     return [ specialize_kim_function(F, periods) for F in abstract_kim_functions ]
+
+
+def Z_one_sixth_kim_functions(p,prec,abstract_kim_functions, li_data=None):
+    r"""
+    Same as `Z_one_sixth_kim_functions_poly` but returns functions X(ℤₚ) → ℚₚ instead of
+    polynomials in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211].
+
+    """
+
+    functions_on_Pi_dR = Z_one_sixth_kim_functions_poly(p,prec,abstract_kim_functions,li_data)
+    return pullback_all_along_kummer(functions_on_Pi_dR, li_data)
 
 
 def abstract_Z_one_over_ell_functions():
@@ -420,7 +460,7 @@ def Z_one_half_periods(p,prec,li_data=None):
 
         - ``prec`` -- a positive integer specifying the p-adic precision
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
     
     OUTPUT: the list of p-adic periods ``[a_τ, a_σ, a_{τσ}]`` for Z = Spec(ℤ[1/2])
 
@@ -436,7 +476,7 @@ def Z_one_half_periods(p,prec,li_data=None):
     return [aτ, aσ, aτσ]
 
 
-def Z_one_half_kim_functions(p,prec,li_data=None):
+def Z_one_half_kim_functions_poly(p,prec,li_data=None):
     r"""
     The four p-adic Kim functions vanishing on the level 4 Chabauty—Kim locus X(ℤₚ)_{Z,4}
     for Z = Spec(ℤ[1/2]). It takes the abstract Kim functions for #S = 1 from
@@ -449,18 +489,26 @@ def Z_one_half_kim_functions(p,prec,li_data=None):
 
         - ``prec`` -- a positive integer specifying the p-adic precision
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
     
     OUTPUT: the list of four polynomials in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211] from
         Theorem 5.2 of [CDCL26], specialized to the case Z = Spec(ℤ[1/2]).
 
     """
 
-    if li_data is None:
-        li_data = polylog_data(4,p,prec)
     periods = Z_one_half_periods(p,prec,li_data)
     abstract_kim_functions = abstract_Z_one_over_ell_functions()
     return [ specialize_kim_function(F_abs, periods) for F_abs in abstract_kim_functions ]
+
+def Z_one_half_kim_functions(p,prec,li_data=None):
+    r"""
+    Same as `Z_one_half_kim_functions_poly` but returns functions X(ℤₚ) → ℚₚ instead of
+    polynomials in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211].
+    
+    """
+
+    functions_on_Pi_dR = Z_one_half_kim_functions_poly(p,prec,li_data)
+    return pullback_all_along_kummer(functions_on_Pi_dR, li_data)
 
 
 def Z_one_third_periods(p,prec,li_data=None):
@@ -475,7 +523,7 @@ def Z_one_third_periods(p,prec,li_data=None):
 
         - ``prec`` -- a positive integer specifying the p-adic precision
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
     
     OUTPUT: the list of p-adic periods ``[a_τ, a_σ, a_{τσ}]`` for Z = Spec(ℤ[1/3])
 
@@ -498,7 +546,7 @@ def Z_one_third_periods(p,prec,li_data=None):
     return [aτ, aσ, aτσ]
 
 
-def Z_one_third_kim_functions(p,prec,li_data=None):
+def Z_one_third_kim_functions_poly(p,prec,li_data=None):
     r"""
     The four p-adic Kim functions vanishing on the level 4 Chabauty—Kim locus X(ℤₚ)_{Z,4}
     for Z = Spec(ℤ[1/3]). It takes the abstract Kim functions for #S = 1 from
@@ -511,15 +559,23 @@ def Z_one_third_kim_functions(p,prec,li_data=None):
 
         - ``prec`` -- a positive integer specifying the p-adic precision
 
-        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency.
+        - ``li_data`` (optional) -- precomputed output of ``polylog_data(4,p,prec)`` for efficiency
     
     OUTPUT: the list of four polynomials in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211] from
         Theorem 5.2 of [CDCL26], specialized to the case Z = Spec(ℤ[1/3]).
 
     """
 
-    if li_data is None:
-        li_data = polylog_data(4,p,prec)
     periods = Z_one_third_periods(p,prec,li_data)
     abstract_kim_functions = abstract_Z_one_over_ell_functions()
     return [ specialize_kim_function(F_abs, periods) for F_abs in abstract_kim_functions ]
+
+def Z_one_third_kim_functions(p,prec,li_data=None):
+    r"""
+    Same as `Z_one_third_kim_functions_poly` but returns functions X(ℤₚ) → ℚₚ instead of
+    polynomials in ℚₚ[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211].
+    
+    """
+
+    functions_on_Pi_dR = Z_one_third_kim_functions_poly(p,prec,li_data)
+    return pullback_all_along_kummer(functions_on_Pi_dR, li_data)

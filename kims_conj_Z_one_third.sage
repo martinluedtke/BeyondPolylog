@@ -30,7 +30,7 @@ expected_sols = [-1] if use_S3_symm else []
 
 def check_prime(p):
     li_data =  polylog_data(4,p,prec)
-    kim_functions = Z_one_third_kim_functions(p,prec,li_data)
+    kim_functions = Z_one_third_kim_functions_poly(p,prec,li_data)
     if use_S3_symm:
         # use only the two polylogarithmic functions if use_S3_symm is set
         kim_functions = kim_functions[:2]

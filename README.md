@@ -11,7 +11,7 @@ The command `sage abstract_kim_functions.sage` constructs the two motivic Kim fu
 ```math
 A(Z)[\mathrm{log},\mathrm{Li}_1,\mathrm{Li}_2,\mathrm{Li}_3,\mathrm{Li}_{2,1},\mathrm{Li}_4,\mathrm{Li}_{3,1}, \mathrm{Li}_{2,1,1}],
 ```
-of weights 10 and 12, respectively, with coefficients in the ring of motivic periods
+of half-weights 10 and 12, respectively, with coefficients in the ring of motivic periods
 ```math
 \mathbb{Q}[a_1, a_2, a_{12}, a_{\sigma}, a_{112}, a_{122}, a_{1112}, a_{1122}, a_{1222}, a_{1\sigma}, a_{2\sigma}] \subseteq A(Z),
 ```

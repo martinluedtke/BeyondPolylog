@@ -1,6 +1,6 @@
 r"""
 Compute two level 4 abstract Kim functions for X = ℙ¹ ⧵ {0,1,∞} and S a set of primes
-with #S = 2. The procedure is described in §5.4 of [CDCL26].
+with #S = 2. The procedure is described in §5.5 of [CDCL26].
 The Kim functions are elements of A(Z)[Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211]
 where A(Z) is the (weight-truncated) algebra of unipotent mixed Tate motivic periods 
 over Z = Spec(ℤ[1/S]), represented in Sage as the polynomial ring 

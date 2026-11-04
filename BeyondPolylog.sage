@@ -312,7 +312,7 @@ def Z_one_sixth_periods(p,prec,li_data=None):
     r"""
     Values of the p-adic periods
       a3,a2,a32,a332,a322,aσ,a3332,a3322,a3222,a3σ,a2σ
-    for Z[1/6] as listed in [CDCL26], Proposition 5.14.
+    for Z[1/6] as listed in [CDCL26], Proposition 5.20.
     Here, "2" and "3" are shorthand for τ₂ and τ₃ and σ is shorthand for σ₃.
 
     INPUT:
@@ -389,7 +389,7 @@ def abstract_Z_one_over_ell_functions():
     with τ being shorthand for τ_ℓ, and σ being shorthand for σ₃.
 
     OUTPUT: the list of polynomials in ℚ[aτ, aσ, aτσ][Log,Li1,Li2,Li3,Li21,Li4,Li31,Li211]
-    from §5.1 of [CDCL26].
+    from Theorem 5.2 of [CDCL26].
 
     """
 
@@ -411,7 +411,7 @@ def abstract_Z_one_over_ell_functions():
 def Z_one_half_periods(p,prec,li_data=None):
     r"""
     The values of the p-adic periods a_τ, a_σ, a_{τσ} ∈ A(Z) for Z = Spec(ℤ[1/2])
-    as listed in Proposition 5.4 of [CDCL26]:
+    as listed in Propositions 2.21 and 5.4 of [CDCL26]:
         a_τ = log(2),  a_σ = ζ(3),  a_{τσ} = 8/7 Li_4(2).
     
     INPUT:
@@ -466,7 +466,7 @@ def Z_one_half_kim_functions(p,prec,li_data=None):
 def Z_one_third_periods(p,prec,li_data=None):
     r"""
     The values of the p-adic periods a_τ, a_σ, a_{τσ} ∈ A(Z) for Z = Spec(ℤ[1/3])
-    as listed in Proposition 5.14 of [CDCL26]:
+    as listed in Propositions 2.21 and 5.8 of [CDCL26]:
         a_τ = log(3),  a_σ = ζ(3),  a_{τσ} = 18/13 Li_4(3) - 3/52 Li_4(9).
     
     INPUT:
